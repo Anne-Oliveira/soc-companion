@@ -1,0 +1,18 @@
+# Segredos
+.env
+
+# Java / Maven
+target/
+*.class
+*.log
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Xcode / macOS
+.DS_Store
+xcuserdata/
+DerivedData/
+*.xcuserstate
