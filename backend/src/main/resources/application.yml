@@ -25,3 +25,7 @@ management:
   endpoint:
     health:
       show-details: never
+
+app:
+  ingest:
+    api-key: ${INGEST_API_KEY}
