@@ -1,21 +1,32 @@
 package com.socompanion.backend.event;
 
+import com.socompanion.backend.detection.DetectionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EventService {
 
-    private final SecurityEventRepository repository;
+    private static final Logger log = LoggerFactory.getLogger(EventService.class);
 
-    public EventService(SecurityEventRepository repository) {
+    private final SecurityEventRepository repository;
+    private final DetectionService detection;
+
+    public EventService(SecurityEventRepository repository, DetectionService detection) {
         this.repository = repository;
+        this.detection = detection;
     }
 
-    @Transactional
     public SecurityEvent ingest(SecurityEventRequest req) {
-        return repository.save(new SecurityEvent(
+        SecurityEvent saved = repository.save(new SecurityEvent(
                 req.eventType(), req.sourceIp(), req.username(),
                 req.message(), req.source(), req.occurredAt()));
+        try {
+            detection.evaluate(saved);
+        } catch (RuntimeException ex) {
+            log.error("Falha na detecção para o evento {}", saved.getId(), ex);
+        }
+        return saved;
     }
 }

@@ -29,6 +29,9 @@ public class Incident {
     @Column(name = "source_ip", length = 45)
     private String sourceIp;
 
+    @Column(name = "detection_rule", nullable = false, length = 50)
+    private String detectionRule;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -37,11 +40,13 @@ public class Incident {
 
     protected Incident() { }
 
-    public Incident(String title, String description, Severity severity, String sourceIp) {
+    public Incident(String title, String description, Severity severity,
+                    String sourceIp, String detectionRule) {
         this.title = title;
         this.description = description;
         this.severity = severity;
         this.sourceIp = sourceIp;
+        this.detectionRule = detectionRule;
     }
 
     @PrePersist
@@ -62,6 +67,7 @@ public class Incident {
     public Severity getSeverity() { return severity; }
     public IncidentStatus getStatus() { return status; }
     public String getSourceIp() { return sourceIp; }
+    public String getDetectionRule() { return detectionRule; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
 
